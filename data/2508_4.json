@@ -150,6 +150,12 @@
     "help": ""
   },
   {
+    "name": "Crisp Game Lib",
+    "url": "https://github.com/MustardOS/extra/releases/latest/download/Extra.-.Crisp.Game.Lib.muxzip",
+    "type": "core",
+    "help": ""
+  },
+  {
     "name": "Discrete Integrated Circuit Emulator",
     "url": "https://github.com/MustardOS/extra/releases/latest/download/Extra.-.Discrete.Integrated.Circuit.Emulator.muxzip",
     "type": "core",
@@ -170,6 +176,12 @@
   {
     "name": "Galaksija Retro Computer",
     "url": "https://github.com/MustardOS/extra/releases/latest/download/Extra.-.Galaksija.Retro.Computer.muxzip",
+    "type": "core",
+    "help": ""
+  },
+    {
+    "name": "Game Tank",
+    "url": "https://github.com/MustardOS/extra/releases/latest/download/Extra.-.Game.Tank.muxzip",
     "type": "core",
     "help": ""
   },
