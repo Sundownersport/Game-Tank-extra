@@ -13,7 +13,8 @@ FILE=${3%/}
 	LOG_INFO "$0" 0 "FILE" "$FILE"
 ) &
 
-HOME="$(GET_VAR "device" "board/home")"
+# Only the game preferences and high scores are kept
+HOME="/run/muos/storage/save/crisp"
 export HOME
 
 SETUP_SDL_ENVIRONMENT
@@ -23,8 +24,8 @@ EMU_DIR="$MUOS_SHARE_DIR/emulator/crisp"
 
 SET_VAR "system" "foreground_process" "$CGLP_BIN"
 
+mkdir -p "$HOME"
 cd "$EMU_DIR" || exit
 
 chmod +x ./"$CGLP_BIN"
 ./"$CGLP_BIN" -f "$FILE"
-
