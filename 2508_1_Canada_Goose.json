@@ -173,6 +173,12 @@
     "type": "core",
     "help": ""
   },
+    {
+    "name": "Game Tank",
+    "url": "https://github.com/MustardOS/extra/releases/latest/download/Game.Tank.muxzip",
+    "type": "core",
+    "help": ""
+  },
   {
     "name": "GCE Vectrex",
     "url": "https://github.com/MustardOS/extra/releases/download/release-20251107-084001/GCE.Vectrex.muxzip",
