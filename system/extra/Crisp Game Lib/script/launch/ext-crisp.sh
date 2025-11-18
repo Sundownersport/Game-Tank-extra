@@ -19,10 +19,12 @@ export HOME
 SETUP_SDL_ENVIRONMENT
 
 CGLP_BIN="cglpsdl2"
-EMU_DIR="$MUOS_SHARE_DIR/emulator/cglpsdl2"
+EMU_DIR="$MUOS_SHARE_DIR/emulator/crisp"
 
 SET_VAR "system" "foreground_process" "$CGLP_BIN"
 
 cd "$EMU_DIR" || exit
+
 chmod +x ./"$CGLP_BIN"
 ./"$CGLP_BIN" -f "$FILE"
+
