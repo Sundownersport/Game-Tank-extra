@@ -18,7 +18,6 @@ USAGE() {
 	echo "Notes:"
 	echo "  - Either -a, -c, or -u is required, but NOT together"
 	echo "  - If -p is used, it MUST be the first argument"
-	echo "  - The -u switch must have a storage pointer (e.g., -u mmc)"
 	echo ""
 	echo "Examples:"
 	echo "  $0 -a"
@@ -27,7 +26,7 @@ USAGE() {
 	echo "  $0 -p -a"
 	echo "  $0 -p -c dosbox-pure sameboy"
 	echo "  $0 -l -a"
-	echo "  $0 -u mmc"
+	echo "  $0 -u"
 	echo ""
 	exit 1
 }
@@ -41,7 +40,7 @@ BUILD_CORES=""
 EXCLUDE_CORES=""
 OPTION_SPECIFIED=0
 UPDATE=0
-STORAGE_POINTER=x
+CLEAN=0
 
 # If argument '-p' or '--purge' provided first, set PURGE=1
 if [ "$#" -gt 0 ]; then
@@ -94,20 +93,8 @@ while [ "$#" -gt 0 ]; do
 			break
 			;;
 		-u | --update)
-			[ "$OPTION_SPECIFIED" -ne 0 ] && USAGE
-			OPTION_SPECIFIED=1
-			shift
-			if [ "$#" -eq 0 ]; then
-				printf "Error: Missing storage pointer\n\n" >&2
-				USAGE
-			fi
-			STORAGE_POINTER="$1"
-			shift
-			[ -z "$STORAGE_POINTER" ] && {
-				printf "Error: Invalid storage pointer\n"
-				exit 1
-			}
 			UPDATE=1
+			shift
 			;;
 		-f | --force)
 			FORCE=1
@@ -172,7 +159,7 @@ SAFE_RM_DIR() {
 UPDATE_ZIP() {
 	UPDATE_ARCHIVE="muOS-RetroArch-Core_Update-$(date +"%Y-%m-%d_%H-%M").muxzip"
 	TEMP_DIR="$(mktemp -d)"
-	CORE_FOLDER="$TEMP_DIR/mnt/$STORAGE_POINTER/MUOS/core"
+	CORE_FOLDER="$TEMP_DIR/core"
 
 	if [ -z "$(ls "$RETRO_DIR"/*.zip 2>/dev/null)" ]; then
 		printf "No ZIP files found in '%s'\n" "$RETRO_DIR" >&2
@@ -292,7 +279,7 @@ else
 fi
 
 # Load the cache file
-CACHE_FILE="$BASE_DIR/cache.json"
+CACHE_FILE="$BASE_DIR/data/cache.json"
 if [ ! -f "$CACHE_FILE" ]; then
     echo "{}" > "$CACHE_FILE"
 fi
@@ -571,15 +558,20 @@ for NAME in $CORES; do
 
 	cd "$RETRO_DIR" || { printf "Failed to enter directory %s\n" "$RETRO_DIR" >&2; RETURN_TO_BASE; continue; }
 
-	# Decide zip name based on how many outputs we had
-	ZIP_NAME=$(
+	# Decide zip name based on .so file if present (multi-output)
+	SOFILE=$(printf "%s\n" $OUTPUTS | grep '\.so$' | head -n1)
+	if [ -n "$SOFILE" ]; then
+		ZIP_NAME="$(basename "$SOFILE").zip"
+	else
+		# fallback to original behavior
 		set -- $OUTPUTS
 		if [ "$#" -eq 1 ]; then
-			printf "%s.zip" "$(basename "$1")"
+			ZIP_NAME="$(basename "$1").zip"
 		else
-			printf "%s.zip" "$NAME"
+			ZIP_NAME="${NAME}.zip"
 		fi
-	)
+	fi
+
 	[ -f "$ZIP_NAME" ] && rm -f "$ZIP_NAME"
 
 	# Zip moved files by basename
